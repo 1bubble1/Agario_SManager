@@ -1,0 +1,64 @@
+// ==UserScript==
+// @name        Agario basic settings
+// @namespace   namespace
+// @description Dark theme, hide stats, show mass, set name
+// @include     http://agar.io/*
+// @version     1
+// @grant       none
+// ==/UserScript==
+
+
+/*-----------------------------------------------*/
+/*---------- Configuration starts here ----------*/
+/*-----------------------------------------------*/  
+var pref_name       = "ௌௌௌௌௌௌௌௌௌௌௌௌௌௌௌ";
+var pref_noskin     = false;
+var pref_noname     = false;
+var pref_nocolor    = false;
+var pref_showmass   = true;
+var pref_darktheme  = true;
+var pref_skipstats  = true;
+var pref_autospawn  = true;
+var pref_gamemode   = ""; // :teams, :experimental, :party
+var pref_region     = "US-Atlanta"; // US-Atlanta, BR-Brazil, EU-London, RU-Russia, TK-Turkey, JP-Tokyo, CN-China, SG-Singapore
+/*-----------------------------------------------*/
+/*----------- Configuration ends here -----------*/
+/*-----------------------------------------------*/
+
+window.onbeforeunload = function() { return "Are you sure you want to leave?"; };
+
+var options = document.getElementById("options");
+var newoptions = '<label><input onchange="setSkins(!$(this).is(\':checked\'));" type="checkbox"><span data-itr="option_no_skins">No skins</span></label>\
+<label><input onchange="setNames(!$(this).is(\':checked\'));" type="checkbox"><span data-itr="option_no_names">No names</span></label>\
+<label><input onchange="setColors($(this).is(\':checked\'));" type="checkbox"><span data-itr="option_no_colors">No colors</span></label>\
+<label><input onchange="setShowMass($(this).is(\':checked\'));" type="checkbox"><span data-itr="option_show_mass">Show mass</span></label>\
+<label><input onchange="setDarkTheme($(this).is(\':checked\'));" type="checkbox"><span data-itr="option_dark_theme">Dark theme</span></label>\
+<label><input onchange="setSkipStats($(this).is(\':checked\'));" type="checkbox"><span data-itr="option_skip_stats">Skip stats</span></label>\
+<label><input onchange="setAutoSpawn($(this).is(\':checked\'));" type="checkbox"><span>Auto Spawn</span></label>'
+options.innerHTML = newoptions;
+
+var checkboxes = options.getElementsByTagName("input");
+checkboxes[0].checked = pref_noskin; setSkins(!pref_noskin);
+checkboxes[1].checked = pref_noname; setNames(!pref_noname);
+checkboxes[2].checked = pref_nocolor; setColors(pref_nocolor);
+checkboxes[3].checked = pref_showmass; setShowMass(pref_showmass);
+checkboxes[4].checked = pref_darktheme; setDarkTheme(pref_darktheme); checkboxes[4].parentNode.style = "border-bottom: 1px solid #CCC; padding-bottom: 5px;";
+checkboxes[5].checked = pref_skipstats; setSkipStats(pref_skipstats); checkboxes[5].parentNode.style = "border-bottom: 1px solid #CCC; padding-bottom: 5px;";
+checkboxes[6].checked = pref_autospawn; setAutoSpawn(pref_autospawn); checkboxes[6].parentNode.style = "padding-top: 5px;";
+$("#nick").val(pref_name); setGameMode(pref_gamemode); setRegion(pref_region);
+
+
+
+
+
+function setAutoSpawn(bChecked)
+{
+    if(bChecked == true) { spawnInterval = setInterval(loopStartGame, 2000); }
+    else { clearInterval(spawnInterval); }
+}
+
+function loopStartGame()
+{
+    setNick(document.getElementById('nick').value);
+    return false;
+}
